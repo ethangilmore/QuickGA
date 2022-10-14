@@ -12,9 +12,9 @@ class FloatTrait(BaseTrait):
         return random.uniform(self.min_value, self.max_value)
 
     def crossover(self, a: float, b: float) -> float:
-        return a if random.uniform() < .5 else b
+        return a if random.random() < .5 else b
 
     def mutate(self, value: float) -> float:
-        if random.uniform < self.mutation_rate:
+        if random.random() < self.mutation_rate:
             return self.random_value()
         return value

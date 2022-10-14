@@ -1,5 +1,5 @@
 import random
-from traits import BaseTrait
+from .basetrait import BaseTrait
 
 class IntTrait(BaseTrait):
 
