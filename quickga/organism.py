@@ -95,8 +95,8 @@ class Organism:
         for trait_name, trait in traits.items:
             self.add_trait(trait_name, trait)
 
-    @staticmethod
-    def evolve(population_size: int, generations: int, selection_function) -> Dict:
+    @classmethod
+    def evolve(cls, population_size: int, generations: int, selection_function) -> Dict:
         """The magic method responsible for optimizing the traits using a Genetic Algorithm
         
         Args:
@@ -107,7 +107,37 @@ class Organism:
             selection_function:
                 A function discribing the way of selecting parents from the population
         """
-        raise NotImplementedError()
+        # the current collection of organisms
+        population = []
+        # data regarding each generation
+        evolution_info = []
+
+        # small function to help generate info for each population
+        def generate_population_info(population):
+            return {
+                'population': population,
+                'max_fitness': max(population, key=lambda x: x.fitness).fitness,
+                'avg_fitness': sum([organism.fitness for organism in population])/len(population),
+                'min_fitness': min(population, key=lambda x: x.fitness)
+            }
+
+        for i in range(generations):
+            # if the population is empty, populate it!
+            if not population:
+                population = [cls() for j in range(population_size)]
+            else:
+                # the selection function returns a list of tuples (representing parents pairs), the same length as the current population
+                parent_pairing = selection_function(population)
+                # if there is only one parent, add it directly into the next generation
+                # if there are two parents, create a child and add the offspring to the next generation
+                population = [parents[0] if len(parents)==1 else parents[0]+parents[1] for parents in parent_pairing]
+            # have each organsim cache it's fitness score to avoid inefficient redundant calls
+            for organism in population:
+                organism.fitness = organism.evaluate()
+            evolution_info.append(generate_population_info(population))
+        
+        return evolution_info
+        
 
     def evaluate(self) -> float:
         """The function which determines the fitness of each Organism
