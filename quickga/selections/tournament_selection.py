@@ -8,8 +8,9 @@ class TournamentSelection(SelectionFunctionFactory):
         self.sample_size = sample_size
         self.enforces_unique_parents = unique_parents
 
-    def select_parent(self, population):
+    def select_parent(self, population, exclude):
         tournament = []
+
         # the number of organisms in the tournament should be equal to the sample size
         while len(tournament) < self.sample_size:
             chosen_for_tournament = random.choice(population)
@@ -18,9 +19,13 @@ class TournamentSelection(SelectionFunctionFactory):
                 chosen_for_tournament = random.choice(population)
             tournament.append(chosen_for_tournament)
         # return the most fit of those randomly chosen for the tournament
+
         return max(tournament, key=lambda x: x.fitness)
 
     def selection_function(self, population):
+        if len(population) < self.sample_size:
+            raise Exception("Population size cannot be less than sample size for Tournament Selection")
+
         parent_pairs = []
         # because each parent group creates one child, the number of parent groups should be equal to the population
         while len(parent_pairs) < len(population):
