@@ -1,5 +1,6 @@
 from typing import Dict
 from quickga.traits.basetrait import BaseTrait
+from quickga import selections
 
 class Organism:
     """A class to represent an Organism with Traits capable of simulated evolution
@@ -96,7 +97,7 @@ class Organism:
             self.add_trait(trait_name, trait)
 
     @classmethod
-    def evolve(cls, population_size: int, generations: int, selection_function) -> Dict:
+    def evolve(cls, population_size: int, generations: int, selection_function=selections.ProportionalSelection()) -> Dict:
         """The magic method responsible for optimizing the traits using a Genetic Algorithm
         
         Args:

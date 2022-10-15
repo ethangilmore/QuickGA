@@ -1,0 +1,2 @@
+from .proportional_selection import ProportionalSelection
+from .tournament_selection import TournamentSelection
