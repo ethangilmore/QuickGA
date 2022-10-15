@@ -115,11 +115,16 @@ class Organism:
 
         # small function to help generate info for each population
         def generate_population_info(population):
+            most_fit = max(population, key=lambda x: x.fitness)
+            least_fit = min(population, key=lambda x: x.fitness)
+
             return {
                 'population': population,
-                'max_fitness': max(population, key=lambda x: x.fitness).fitness,
+                'most_fit': most_fit,
+                'least_fit': least_fit,
+                'max_fitness': most_fit.fitness,
                 'avg_fitness': sum([organism.fitness for organism in population])/len(population),
-                'min_fitness': min(population, key=lambda x: x.fitness)
+                'min_fitness': least_fit
             }
 
         for i in range(generations):

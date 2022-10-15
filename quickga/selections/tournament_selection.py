@@ -8,7 +8,7 @@ class TournamentSelection(SelectionFunctionFactory):
         self.sample_size = sample_size
         self.enforces_unique_parents = unique_parents
 
-    def select_parent(self, population, exclude):
+    def select_parent(self, population):
         tournament = []
 
         # the number of organisms in the tournament should be equal to the sample size
