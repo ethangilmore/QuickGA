@@ -6,7 +6,7 @@ class Organism:
     """A class to represent an Organism with Traits capable of simulated evolution
 
     Derived classes should use the add_trait or set_trait method to add traits capable of optimization
-    The traits name should be the same as the class attribute
+    The traits name should be the same as the instance attribute
 
     All derived classes must implement the 'evaluate' method
     This method recieves no arguments and returns a numeric value representing a fitness score (higher value means more fit)
@@ -41,7 +41,7 @@ class Organism:
             raise Exception(f"Addition operation not supported for types {self.__class__.__name__} and {other.__class__.__name__}")
         # create new object of the same type as self
         child = self.__class__()
-        # cache a reference to the parents and childrens class attributes
+        # cache a reference to the parents and childrens instance attributes
         child_vars = vars(child)
         parent1_vars = vars(self)
         parent2_vars = vars(other)
@@ -49,7 +49,7 @@ class Organism:
         for trait_name in self._traits:
             # we need the trait object because it contains the logic for creating a new value from the parents values
             trait_obj = self._traits[trait_name]
-            # sets the child objects actual class attribute to the value derived from both the parents
+            # sets the child objects actual instance attribute to the value derived from both the parents
             child_vars[trait_name] = trait_obj.from_parent_values(parent1_vars[trait_name], parent2_vars[trait_name])
 
         child.parents = [self, other]
@@ -58,7 +58,7 @@ class Organism:
     def add_trait(self, variable_name: str, trait: BaseTrait) -> None:
         """Adds a new trait capable of optimization to the organism
         
-        A new class attribute will be created with the name provided in the 'variable_name'
+        A new instance attribute will be created with the name provided in the 'variable_name'
         and the inital value will be set using the logic from the corresponding trait
 
         Example:
@@ -69,7 +69,7 @@ class Organism:
 
         Args:
             variable_name:
-                The name of the trait and class attribute
+                The name of the trait and instance attribute
             trait:
                 An object of a class derived from BaseTrait containing the logic for how the trait should be passed down
         """
@@ -79,7 +79,7 @@ class Organism:
     def set_traits(self, traits: Dict[str, BaseTrait]) -> None:
         """Sets all of the traits capable of optimization in the organism
         
-        New class attributes will be created with the names provided in the keys of the traits Dict
+        New instance attributes will be created with the names provided in the keys of the traits Dict
         and the inital values will be set using the logic from mapped corresponding trait
 
         Example:
