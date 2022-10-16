@@ -115,7 +115,8 @@ class Organism:
 
     @classmethod
     def evolve(cls, population_size: int, generations: int, selection_function=selections.ProportionalSelection(),
-            crossover_rate: float=0.85, elite_rate: float=0, incel_rate: float=0, migration_rate: float=0) -> Dict:
+            crossover_rate: float=0.85, elite_rate: float=0, incel_rate: float=0, migration_rate: float=0,
+            generational_callback=None) -> Dict:
         """The magic method responsible for optimizing the traits using a Genetic Algorithm
         
         Args:
@@ -179,7 +180,12 @@ class Organism:
             # have each organsim cache it's fitness score to avoid inefficient redundant calls
             for organism in population:
                 organism.fitness = organism.evaluate()
-            evolution_info.append(cls.__generate_population_info(population))
+
+            info = cls.__generate_population_info(population)
+
+            evolution_info.append(info)
+            if generational_callback:
+                generational_callback(info)
         
         return evolution_info
         
