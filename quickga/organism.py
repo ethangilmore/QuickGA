@@ -124,7 +124,16 @@ class Organism:
             generations:
                 How many generations of evolution should take place
             selection_function:
-                A function discribing the way of selecting parents from the population
+                A function discribing the way of selecting and breeding parents from the population
+            crossover_rate: [0,1]
+                The chance that two parents will crossover and add an offspring to the next generation
+                (as opposed to being directly carried down to the next generation)
+            elite_rate: [0,1]
+                The top X percent of the population that will be directly carried down to the next generation
+            incel_rate: [0,1]
+                The lowest X percent of the population that will be removed from the parent pool
+            migration_rate: [0,]
+                Adds X percent of the population as random organisms to the parent pool
         """
         # the current collection of organisms
         population = []
