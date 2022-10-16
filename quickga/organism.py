@@ -1,4 +1,7 @@
+import math
+import random
 from typing import Dict
+
 from quickga.traits.basetrait import BaseTrait
 from quickga import selections
 
@@ -96,8 +99,23 @@ class Organism:
         for trait_name, trait in traits.items:
             self.add_trait(trait_name, trait)
 
+    @staticmethod
+    def __generate_population_info(population):
+        """Creates a dictionary of stats and info for a population"""
+        most_fit = max(population, key=lambda x: x.fitness)
+        least_fit = min(population, key=lambda x: x.fitness)
+        return {
+            'population': population,
+            'most_fit': most_fit,
+            'least_fit': least_fit,
+            'max_fitness': most_fit.fitness,
+            'avg_fitness': sum([organism.fitness for organism in population])/len(population),
+            'min_fitness': least_fit.fitness
+        }
+
     @classmethod
-    def evolve(cls, population_size: int, generations: int, selection_function=selections.ProportionalSelection()) -> Dict:
+    def evolve(cls, population_size: int, generations: int, selection_function=selections.ProportionalSelection(),
+            crossover_rate: float=0.85, elite_rate: float=0, incel_rate: float=0, migration_rate: float=0) -> Dict:
         """The magic method responsible for optimizing the traits using a Genetic Algorithm
         
         Args:
@@ -113,34 +131,46 @@ class Organism:
         # data regarding each generation
         evolution_info = []
 
-        # small function to help generate info for each population
-        def generate_population_info(population):
-            most_fit = max(population, key=lambda x: x.fitness)
-            least_fit = min(population, key=lambda x: x.fitness)
-
-            return {
-                'population': population,
-                'most_fit': most_fit,
-                'least_fit': least_fit,
-                'max_fitness': most_fit.fitness,
-                'avg_fitness': sum([organism.fitness for organism in population])/len(population),
-                'min_fitness': least_fit
-            }
-
         for i in range(generations):
             # if the population is empty, populate it!
             if not population:
                 population = [cls() for j in range(population_size)]
             else:
-                # the selection function returns a list of tuples (representing parents pairs), the same length as the current population
-                parent_pairing = selection_function(population)
-                # if there is only one parent, add it directly into the next generation
-                # if there are two parents, create a child and add the offspring to the next generation
-                population = [parents[0] if len(parents)==1 else parents[0]+parents[1] for parents in parent_pairing]
+                # sort the population from highest to lowest fitness
+                population.sort(key=lambda x: x.fitness, reverse=True)
+                # the first 'elite_rate' percent of the list are elites (carried down to next generation)
+                elites_end_index = math.floor(elite_rate*len(population))
+                # the last 'incel_rate' percent of the list are incels (removed from the breeding pool lol)
+                incel_start_index = math.floor((1-incel_rate)*len(population))
+                # between the elites and the incels have a random chance of being carried down without crossover (dependent on crossover_rate)
+                # this mask is false for each organism that does not undergo crossover
+                crossover_mask = [random.random() < crossover_rate for i in range(incel_start_index-elites_end_index)]
+                # migrated organisms are random organisms added to the parent pool to create diversity
+                num_migrated_organisms = math.floor(migration_rate*len(population))
+
+                elites = population[:elites_end_index]
+                not_crossed_over = [population[i+elites_end_index] for i in range(incel_start_index-elites_end_index) if not crossover_mask[i]]
+                migrated = [cls() for j in range(num_migrated_organisms)]
+                # we need to evaluate the fitness for the migrated organisms so that they are properly chosen by selection_functions
+                for organism in migrated:
+                    organism.fitness = organism.evaluate()
+                
+                # elites and others chosen by crossover_rate are carried down directly to next generation
+                new_population = elites + not_crossed_over
+
+                # fill the rest of the population with new offspring
+                parent_pool = population[:incel_start_index] + migrated
+                num_offspring = len(population) - len(new_population)
+                offspring = selection_function(parent_pool, num_offspring)
+
+                new_population += offspring
+
+                population = new_population
+
             # have each organsim cache it's fitness score to avoid inefficient redundant calls
             for organism in population:
                 organism.fitness = organism.evaluate()
-            evolution_info.append(generate_population_info(population))
+            evolution_info.append(cls.__generate_population_info(population))
         
         return evolution_info
         
