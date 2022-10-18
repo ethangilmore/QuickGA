@@ -12,9 +12,7 @@ class IntTrait(BaseTrait):
         return random.randint(self.min_value, self.max_value)
 
     def crossover(self, a: int, b: int) -> int:
-        return a if random.random() < .5 else b
+        return random.choice([a,b])
 
     def mutate(self, value: int) -> int:
-        if random.random() < self.mutation_rate:
-            return self.random_value()
-        return value
+        return self.random_value() if random.random()<self.mutation_rate else value

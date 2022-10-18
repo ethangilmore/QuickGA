@@ -116,4 +116,4 @@ class SequenceTrait(BaseTrait):
     def mutate(self, value):
         if random.random() < self.mutation_rate:
             return self.mutation_functions[self.mutation_type](value)
-        return random
+        return value
