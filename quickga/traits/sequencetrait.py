@@ -26,23 +26,88 @@ class SequenceTrait(BaseTrait):
     """
 
     def __random_unique_index_pair(self, items):
+        """Returns two unique indices for a list"""
         index_a = random.randint(0,len(items)-1)
         index_b = random.randint(0,len(items)-2)
         index_b += 1 if index_b >= index_a else 0
         return index_a, index_b
 
     def uniform_crossover(self, a, b):
+        """For each value in the child sequence, it is chosen from one of the parents at random
+        
+        example:
+            a = [0,0,0,0,0,0,0,0,0,0]
+            b = [1,1,1,1,1,1,1,1,1,1]
+            c = [0,1,1,0,0,1,0,0,1,1]
+
+        Args:
+            a: list
+                Sequence from one parent
+            b: list
+                Sequence form other parent
+
+        Returns:
+            A new list made from the crossover of the two parent lists
+        """
         return [a[i] if random.random()<.5 else b[i] for i in range(len(a))]
 
     def one_point_crossover(self, a, b):
+        """Chooses one point in the childs sequence, values before will be inherited from one parent, values after from the other parent
+        
+        example:
+            a = [0,0,0,0,0,0,0,0,0,0]
+            b = [1,1,1,1,1,1,1,1,1,1]
+            c = [0,0,0,0,1,1,1,1,1,1]
+
+        Args:
+            a: list
+                Sequence from one parent
+            b: list
+                Sequence form other parent
+
+        Returns:
+            A new list made from the crossover of the two parent lists
+        """
         self.n = 1
         return self.n_point_crossover(a, b)
 
     def two_point_crossover(self, a, b):
+        """Chooses two points in the childs sequence, values between points will be inherited from one parent, other values from the other parent
+        
+        example:
+            a = [0,0,0,0,0,0,0,0,0,0]
+            b = [1,1,1,1,1,1,1,1,1,1]
+            c = [0,0,0,0,1,1,1,1,0,0]
+
+        Args:
+            a: list
+                Sequence from one parent
+            b: list
+                Sequence form other parent
+
+        Returns:
+            A new list made from the crossover of the two parent lists
+        """
         self.n = 2
         return self.n_point_crossover(a, b)
 
     def n_point_crossover(self, a, b):
+        """N-point crossover for however many points specified
+        
+        example: n = 3
+            a = [0,0,0,0,0,0,0,0,0,0]
+            b = [1,1,1,1,1,1,1,1,1,1]
+            c = [0,0,1,1,1,0,0,0,1,1]
+
+        Args:
+            a: list
+                Sequence from one parent
+            b: list
+                Sequence form other parent
+
+        Returns:
+            A new list made from the crossover of the two parent lists
+        """
         if not self.n:
             raise Exception("No n defined for n-point crossover")
         
@@ -60,12 +125,40 @@ class SequenceTrait(BaseTrait):
 
 
     def random_reset_mutation(self, value):
+        """Randomly resets a value in the sequence
+
+        Example:
+            value = [0,1,2,3,4,5,6,7,8,9]
+            value = [0,1,2,9,4,5,6,7,8,9]
+                           ^
+        Args:
+            value: list
+                The sequence to be mutated
+
+        Returns:
+            The mutated sequence
+        """
+
         random_index = random.randint(0,len(value)-1)
         value[random_index] = self.trait.random_value()
 
         return value
 
     def insertion_mutation(self, value):
+        """Randomly moves one value to another index in the array, shifts all other values
+
+        Example:
+            value = [0,1,2,3,4,5,6,7,8,9]
+            value = [0,1,2,9,3,4,5,6,7,8]
+                           ^ ^ ^ ^ ^ ^ ^ 
+        Args:
+            value: list
+                The sequence to be mutated
+
+        Returns:
+            The mutated sequence
+        """
+
         remove_index, insert_index = self.__random_unique_index_pair(value)
         temp = value.pop(remove_index)
         value.insert(insert_index, temp)
@@ -73,6 +166,20 @@ class SequenceTrait(BaseTrait):
         return value
 
     def swap_mutation(self, value):
+        """Randomly swaps two values in the sequence
+
+        Example:
+            value = [0,1,2,3,4,5,6,7,8,9]
+            value = [0,1,2,9,4,5,6,7,8,3]
+                           ^           ^
+        Args:
+            value: list
+                The sequence to be mutated
+
+        Returns:
+            The mutated sequence
+        """
+
         index_a, index_b = self.__random_unique_index_pair(value)
 
         temp = value[index_a]
@@ -82,6 +189,20 @@ class SequenceTrait(BaseTrait):
         return value
 
     def scramble_mutation(self, value):
+        """Randomly scrambles a section in the sequence
+
+        Example:
+            value = [0,1,2,3,4,5,6,7,8,9]
+            value = [0,1,2,5,7,3,9,6,8,9]
+                           ^ ^ ^ ^ ^
+        Args:
+            value: list
+                The sequence to be mutated
+
+        Returns:
+            The mutated sequence
+        """
+
         index_a, index_b = self.__random_unique_index_pair(value)
         scramble_section = value[index_a:index_b]
         random.shuffle(scramble_section)
@@ -90,6 +211,21 @@ class SequenceTrait(BaseTrait):
         return value
 
     def inversion_mutation(self, value):
+        """Randomly reverses a section in the sequence
+
+        Example:
+            value = [0,1,2,3,4,5,6,7,8,9]
+            value = [0,1,2,7,6,5,4,3,8,9]
+                           ^ ^ ^ ^ ^
+
+        Args:
+            value: list
+                The sequence to be mutated
+
+        Returns:
+            The mutated sequence
+        """
+
         index_a, index_b = self.__random_unique_index_pair(value)
         invert_section = value[index_a:index_b]
         invert_section.reverse()
@@ -114,7 +250,7 @@ class SequenceTrait(BaseTrait):
             n: int
                 If the user selects the crossover type 'n-point' the n should be specified with this argument
         """
-        
+
         self.trait = trait
         self.length = length
         self.crossover_type = crossover_type
