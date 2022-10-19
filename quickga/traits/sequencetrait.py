@@ -2,6 +2,28 @@ import random
 from .basetrait import BaseTrait
 
 class SequenceTrait(BaseTrait):
+    """A Trait whose value is a List (or "Sequence") of the values of another Trait
+
+    initialize:
+        Value initializes to a list of values defined by the provided Trait's initial value
+
+    crossover:
+        Currently implemented crossover methods include
+            - 1-point crossover
+            - 2-point crossover
+            - n-point crossover
+            - uniform crossover
+
+    mutate:
+        Currently implemented mutation methods include
+            - random-reset mutation
+            - insertion mutation
+            - swap mutation
+            - scramble mutation
+            - inversion mutation
+
+        If mutated, value gets set mutated according to the method specified in the constructor
+    """
 
     def __random_unique_index_pair(self, items):
         index_a = random.randint(0,len(items)-1)
@@ -77,6 +99,22 @@ class SequenceTrait(BaseTrait):
 
 
     def __init__(self, trait, length: int, crossover_type: str, mutation_type: str, mutation_rate: float=0.05, n: int=None):
+        """
+        Args:
+            trait: Trait
+                The trait which defines the values in the sequence
+            length: int
+                How long the sequence should be
+            crossover_type: str
+                One of ['uniform', '1-point', '2-point', 'n-point']
+            mutation_type: str
+                One of ['random-reset', 'swap', 'inseriton', 'scramble', 'inversion']
+            mutaion_type: float
+                The chance of a value being mutated each generation
+            n: int
+                If the user selects the crossover type 'n-point' the n should be specified with this argument
+        """
+        
         self.trait = trait
         self.length = length
         self.crossover_type = crossover_type
@@ -100,9 +138,9 @@ class SequenceTrait(BaseTrait):
         }
 
         if crossover_type not in self.crossover_functions:
-            raise Exception("Invalid crossover_type provided")
+            raise Exception("Invalid crossover type provided")
         if mutation_type not in self.mutation_functions:
-            raise Exception("Invalid mutation_type provided")
+            raise Exception("Invalid mutation type provided")
 
     def initial_value(self):
         return [self.trait.initial_value() for i in range(self.length)]
