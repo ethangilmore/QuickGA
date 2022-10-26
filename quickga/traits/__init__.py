@@ -1,5 +1,6 @@
 from .basetrait import BaseTrait
 from .sequencetrait import SequenceTrait
+from .permutationtrait import PermutationSequenceTrait
 from .binarytrait import BinaryTrait
 from .binarysequencetrait import BinarySequenceTrait
 from .inttrait import IntTrait
