@@ -1,4 +1,4 @@
-from .selection_function_factory import SelectionFunctionFactory
+from .selectionfunctionfactory import SelectionFunctionFactory
 import random
 
 class ProportionalSelection(SelectionFunctionFactory):

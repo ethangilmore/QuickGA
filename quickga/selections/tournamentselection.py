@@ -1,6 +1,6 @@
 import random
 from select import select
-from .selection_function_factory import SelectionFunctionFactory
+from .selectionfunctionfactory import SelectionFunctionFactory
 
 class TournamentSelection(SelectionFunctionFactory):
 

@@ -5,5 +5,5 @@ class SelectionFunctionFactory:
 
         return obj.selection_function
 
-    def selection_function(self, population):
+    def selection_function(self, parent_pool, num_offspring):
         raise Exception("Must implement 'selection_function' method")
