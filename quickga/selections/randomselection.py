@@ -6,6 +6,7 @@ class RandomSelection(SelectionFunctionFactory):
         self.enforces_unique_parents = unique_parents
 
     def selection_function(self, parent_pool: list, num_offspring: int) -> list:
+        self.validate_arguments(parent_pool, num_offspring)
         parent_pairs = []
         select_parent = lambda : random.choice(parent_pool)
 

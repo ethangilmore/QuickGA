@@ -14,6 +14,7 @@ class RankSelection(SelectionFunctionFactory):
                 return i
 
     def selection_function(self, parent_pool: list, num_offspring: int) -> int:
+        self.validate_arguments(parent_pool, num_offspring)
         parent_pairs = []
 
         parent_pool.sort(key=lambda x: x.fitness)

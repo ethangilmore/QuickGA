@@ -23,6 +23,7 @@ class TournamentSelection(SelectionFunctionFactory):
         return max(tournament, key=lambda x: x.fitness)
 
     def selection_function(self, parent_pool: list, num_offspring: int):
+        self.validate_arguments(parent_pool, num_offspring)
         if len(parent_pool) < self.sample_size:
             raise Exception("Population size cannot be less than sample size for Tournament Selection")
 

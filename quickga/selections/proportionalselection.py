@@ -15,6 +15,7 @@ class ProportionalSelection(SelectionFunctionFactory):
                 return i
 
     def selection_function(self, parent_pool: list, num_offspring: int) -> list:
+        self.validate_arguments(parent_pool, num_offspring)
         parent_pairs = []
         # cache the fitnesses and total_fitness so that we don't need to recalculate every time a parent is selected
         fitnesses = [organism.fitness for organism in parent_pool]
