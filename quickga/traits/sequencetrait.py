@@ -1,4 +1,5 @@
 import random
+from typing import Tuple
 from .basetrait import BaseTrait
 
 class SequenceTrait(BaseTrait):
@@ -70,14 +71,14 @@ class SequenceTrait(BaseTrait):
         If mutated, value gets set mutated according to the method specified in the constructor
     """
 
-    def random_unique_index_pair(self, items):
+    def random_unique_index_pair(self, items: list) -> Tuple[int, int]:
         """Returns two unique indices for a list"""
         index_a = random.randint(0,len(items)-1)
         index_b = random.randint(0,len(items)-2)
         index_b += 1 if index_b >= index_a else 0
         return index_a, index_b
 
-    def uniform_crossover(self, a, b):
+    def uniform_crossover(self, a: list, b: list) -> list:
         """For each value in the child sequence, it is chosen from one of the parents at random
         
         example:
@@ -96,7 +97,7 @@ class SequenceTrait(BaseTrait):
         """
         return [a[i] if random.random()<.5 else b[i] for i in range(len(a))]
 
-    def one_point_crossover(self, a, b):
+    def one_point_crossover(self, a: list, b: list) -> list:
         """Chooses one point in the childs sequence, values before will be inherited from one parent, values after from the other parent
         
         example:
@@ -116,7 +117,7 @@ class SequenceTrait(BaseTrait):
         self.n = 1
         return self.n_point_crossover(a, b)
 
-    def two_point_crossover(self, a, b):
+    def two_point_crossover(self, a: list, b: list) -> list:
         """Chooses two points in the childs sequence, values between points will be inherited from one parent, other values from the other parent
         
         example:
@@ -136,7 +137,7 @@ class SequenceTrait(BaseTrait):
         self.n = 2
         return self.n_point_crossover(a, b)
 
-    def n_point_crossover(self, a, b):
+    def n_point_crossover(self, a: list, b: list) -> list:
         """N-point crossover for however many points specified
         
         example: n = 3
@@ -169,7 +170,7 @@ class SequenceTrait(BaseTrait):
         return new_sequence
 
 
-    def random_reset_mutation(self, value):
+    def random_reset_mutation(self, value: list) -> list:
         """Randomly resets a value in the sequence
 
         Example:
@@ -189,7 +190,7 @@ class SequenceTrait(BaseTrait):
 
         return value
 
-    def insertion_mutation(self, value):
+    def insertion_mutation(self, value: list) -> list:
         """Randomly moves one value to another index in the array, shifts all other values
 
         Example:
@@ -204,13 +205,13 @@ class SequenceTrait(BaseTrait):
             The mutated sequence
         """
 
-        remove_index, insert_index = self.__random_unique_index_pair(value)
+        remove_index, insert_index = self.random_unique_index_pair(value)
         temp = value.pop(remove_index)
         value.insert(insert_index, temp)
 
         return value
 
-    def swap_mutation(self, value):
+    def swap_mutation(self, value: list) -> list:
         """Randomly swaps two values in the sequence
 
         Example:
@@ -225,7 +226,7 @@ class SequenceTrait(BaseTrait):
             The mutated sequence
         """
 
-        index_a, index_b = self.__random_unique_index_pair(value)
+        index_a, index_b = self.random_unique_index_pair(value)
 
         temp = value[index_a]
         value[index_a] = value[index_b]
@@ -233,7 +234,7 @@ class SequenceTrait(BaseTrait):
 
         return value
 
-    def scramble_mutation(self, value):
+    def scramble_mutation(self, value: list) -> list:
         """Randomly scrambles a section in the sequence
 
         Example:
@@ -248,14 +249,14 @@ class SequenceTrait(BaseTrait):
             The mutated sequence
         """
 
-        index_a, index_b = self.__random_unique_index_pair(value)
+        index_a, index_b = self.random_unique_index_pair(value)
         scramble_section = value[index_a:index_b]
         random.shuffle(scramble_section)
         value[index_a:index_b] = scramble_section
 
         return value
 
-    def inversion_mutation(self, value):
+    def inversion_mutation(self, value: list) -> list:
         """Randomly reverses a section in the sequence
 
         Example:
@@ -271,23 +272,23 @@ class SequenceTrait(BaseTrait):
             The mutated sequence
         """
 
-        index_a, index_b = self.__random_unique_index_pair(value)
+        index_a, index_b = self.random_unique_index_pair(value)
         invert_section = value[index_a:index_b]
         invert_section.reverse()
         value[index_a:index_b] = invert_section
 
         return value
 
-    def initial_value(self):
+    def initial_value(self) -> list:
         return [self.trait.initial_value() for i in range(self.length)]
 
-    def random_value(self):
+    def random_value(self) -> list:
         return [self.trait.random_value() for i in range(self.length)]
 
-    def crossover(self, a, b):
+    def crossover(self, a: list, b: list) -> list:
         return self.crossover_functions[self.crossover_type](a, b)
 
-    def mutate(self, value):
+    def mutate(self, value: list) -> list:
         if random.random() < self.mutation_rate:
             return self.mutation_functions[self.mutation_type](value)
         return value

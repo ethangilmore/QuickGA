@@ -20,7 +20,6 @@ class BaseTrait:
             b:
                 The value from the second parent
         """
-
         new_value = self.crossover(a, b)
         new_value = self.mutate(new_value)
         return new_value

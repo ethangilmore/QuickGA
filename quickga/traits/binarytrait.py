@@ -22,12 +22,12 @@ class BinaryTrait(BaseTrait):
         """
         self.mutation_rate = mutation_rate
 
-    def random_value(self):
+    def random_value(self) -> int:
         return random.choice([0, 1])
 
-    def crossover(self, a, b):
+    def crossover(self, a: int, b: int) -> int:
         return random.choice([a,b])
 
-    def mutate(self, value):
+    def mutate(self, value: int) -> int:
         return self.random_value() if random.random()<self.mutation_rate else value
         

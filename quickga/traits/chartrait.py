@@ -31,11 +31,11 @@ class CharTrait(BaseTrait):
         if 'punctuation' in include:
             self.char_pool += string.punctuation
         
-    def random_value(self):
+    def random_value(self) -> str:
         return random.choice(self.char_pool)
 
-    def crossover(self, a, b):
+    def crossover(self, a: str, b: str) -> str:
         return random.choice([a,b])
 
-    def mutate(self, value):
+    def mutate(self, value: str):
         return self.random_value() if random.random()<self.mutation_rate else value
