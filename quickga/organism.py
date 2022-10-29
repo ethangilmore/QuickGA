@@ -1,9 +1,7 @@
 import math
 import random
-from typing import Dict
 
-from quickga.traits.basetrait import BaseTrait
-from quickga import selections
+from quickga import BaseTrait, ProportionalSelection
 
 class Organism:
     """A class to represent an Organism with Traits capable of simulated evolution
@@ -26,7 +24,7 @@ class Organism:
         self.fitness = 0
         self.parents = []
 
-    def __add__(self, other):
+    def __add__(self, other) -> 'Organism':
         """Creates a new object of the same class whose traits are generated from the parents"""
         return self.breed(other)
 
@@ -58,7 +56,7 @@ class Organism:
         child.parents = [self, other]
         return child
 
-    def add_trait(self, variable_name: str, trait: BaseTrait) -> None:
+    def add_trait(self, variable_name: str, trait: BaseTrait):
         """Adds a new trait capable of optimization to the organism
         
         A new instance attribute will be created with the name provided in the 'variable_name'
@@ -79,7 +77,7 @@ class Organism:
         self._traits[variable_name] = trait
         vars(self)[variable_name] = trait.inital_value()
 
-    def set_traits(self, traits: Dict[str, BaseTrait]) -> None:
+    def set_traits(self, traits: dict):
         """Sets all of the traits capable of optimization in the organism
         
         New instance attributes will be created with the names provided in the keys of the traits Dict
@@ -100,7 +98,7 @@ class Organism:
             self.add_trait(trait_name, trait)
 
     @staticmethod
-    def __generate_population_info(population):
+    def __generate_population_info(population: list) -> dict:
         """Creates a dictionary of stats and info for a population"""
         most_fit = max(population, key=lambda x: x.fitness)
         least_fit = min(population, key=lambda x: x.fitness)
@@ -114,9 +112,9 @@ class Organism:
         }
 
     @classmethod
-    def evolve(cls, population_size: int, generations: int, selection_function=selections.ProportionalSelection(),
+    def evolve(cls, population_size: int, generations: int, selection_function=ProportionalSelection(),
             crossover_rate: float=0.85, elite_rate: float=0, incel_rate: float=0, migration_rate: float=0,
-            generational_callback=None) -> Dict:
+            generational_callback=None) -> dict:
         """The magic method responsible for optimizing the traits using a Genetic Algorithm
         
         Args:
