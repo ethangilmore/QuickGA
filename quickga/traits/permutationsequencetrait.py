@@ -1,8 +1,4 @@
-from lib2to3.pytree import Base
-from logging import raiseExceptions
-from multiprocessing.sharedctypes import Value
 import random
-from tracemalloc import start
 from .sequencetrait import SequenceTrait
 
 class PermutationSequenceTrait(SequenceTrait):
