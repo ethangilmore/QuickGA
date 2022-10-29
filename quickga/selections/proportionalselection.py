@@ -6,7 +6,7 @@ class ProportionalSelection(SelectionFunctionFactory):
     def __init__(self, unique_parents: bool=False):
         self.enforces_unique_parents = unique_parents
 
-    def select_parent_index(self, fitnesses, total_fitness):
+    def select_parent_index(self, fitnesses: list, total_fitness: int) -> int:
         current_sum = 0
         stop = random.uniform(0,total_fitness)
         for i in range(len(fitnesses)):
@@ -14,7 +14,7 @@ class ProportionalSelection(SelectionFunctionFactory):
             if current_sum >= stop:
                 return i
 
-    def selection_function(self, parent_pool, num_offspring):
+    def selection_function(self, parent_pool: list, num_offspring: int) -> list:
         parent_pairs = []
         # cache the fitnesses and total_fitness so that we don't need to recalculate every time a parent is selected
         fitnesses = [organism.fitness for organism in parent_pool]

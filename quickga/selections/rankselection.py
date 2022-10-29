@@ -5,7 +5,7 @@ class RankSelection(SelectionFunctionFactory):
     def __init__(self, unique_parents: bool = False):
         self.enforces_unique_parents = unique_parents
 
-    def select_parent_index(self, ranks, rank_sum):
+    def select_parent_index(self, ranks: list, rank_sum: int) -> int:
         current_sum = 0
         stop = random.uniform(0,rank_sum)
         for i in range(len(ranks)):
@@ -13,7 +13,7 @@ class RankSelection(SelectionFunctionFactory):
             if current_sum >= stop:
                 return i
 
-    def selection_function(self, parent_pool, num_offspring):
+    def selection_function(self, parent_pool: list, num_offspring: int) -> int:
         parent_pairs = []
 
         parent_pool.sort(key=lambda x: x.fitness)
